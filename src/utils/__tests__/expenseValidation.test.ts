@@ -57,6 +57,31 @@ describe("validateExpenseInput", () => {
     expect(result.errors).toContain("Date is required.");
   });
 
+
+  it("rejects a category that is not supported", () => {
+    const result = validateExpenseInput({ ...validInput, category: "Unknown" });
+    expect(result.valid).toBe(false);
+    expect(result.errors).toContain("Please select a valid category.");
+  });
+
+  it("rejects a malformed date", () => {
+    const result = validateExpenseInput({ ...validInput, date: "not-a-date" });
+    expect(result.valid).toBe(false);
+    expect(result.errors).toContain("Please enter a valid date.");
+  });
+
+  it("rejects an impossible calendar date", () => {
+    const result = validateExpenseInput({ ...validInput, date: "2026-02-30" });
+    expect(result.valid).toBe(false);
+    expect(result.errors).toContain("Please enter a valid date.");
+  });
+
+  it("rejects an infinite amount", () => {
+    const result = validateExpenseInput({ ...validInput, amount: "Infinity" });
+    expect(result.valid).toBe(false);
+    expect(result.errors).toContain("Amount must be a valid number.");
+  });
+
   it("reports all problems at once", () => {
     const result = validateExpenseInput({
       title: "",

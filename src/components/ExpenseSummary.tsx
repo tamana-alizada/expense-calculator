@@ -1,4 +1,8 @@
-import { formatCurrency } from "../utils/expenseCalculations";
+import {
+  calculateTotal,
+  findHighestExpense,
+  formatCurrency,
+} from "../utils/expenseCalculations";
 import type { Expense } from "../types/expense";
 
 interface ExpenseSummaryProps {
@@ -6,11 +10,8 @@ interface ExpenseSummaryProps {
 }
 
 export function ExpenseSummary({ expenses }: ExpenseSummaryProps) {
-  const total = expenses.reduce((sum, expense) => sum + expense.amount, 0);
-  const highest = expenses.reduce(
-    (max, expense) => (expense.amount > max ? expense.amount : max),
-    0,
-  );
+  const total = calculateTotal(expenses);
+  const highest = findHighestExpense(expenses)?.amount ?? 0;
 
   return (
     <section className="summary-grid" aria-label="Expense summary">

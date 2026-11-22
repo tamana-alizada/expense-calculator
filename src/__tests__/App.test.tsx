@@ -40,6 +40,17 @@ describe("App integration", () => {
     ).toHaveTextContent("1");
   });
 
+
+  it("calculates the total and highest expense across multiple expenses", async () => {
+    render(<App />);
+    await fillAndSubmit({ title: "Groceries", amount: "25.50", category: "Food" });
+    await fillAndSubmit({ title: "Bus ticket", amount: "2.75", category: "Transport" });
+
+    expect(screen.getAllByText("$28.25")).toHaveLength(1);
+    expect(screen.getAllByText("$25.50")).toHaveLength(2);
+    expect(screen.getByText(/number of expenses/i).parentElement).toHaveTextContent("2");
+  });
+
   it("shows validation errors and does not save invalid input", async () => {
     render(<App />);
     const user = userEvent.setup();
